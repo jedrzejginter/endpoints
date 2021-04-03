@@ -30,11 +30,11 @@ export type EndpointProp<
 export function forEndpoints<Endpoints extends ShapeOfEndpoints>(
   fetcher: AxiosInstance,
 ) {
-  async function request<Url extends keyof Endpoints>(
+  function request<Url extends keyof Endpoints>(
     urlWithMethod: Url,
     options: Omit<AxiosRequestConfig, 'data' | 'url' | 'method' | 'params'> &
       Omit<Endpoints[Url], 'response' | 'responses'>,
-  ): Promise<AxiosResponse<PickOrUnknown<Endpoints[Url], 'response'>>> {
+  ): Promise<AxiosResponse<EndpointProp<Endpoints, Url, 'response'>>> {
     const { params, query, ...config } = options;
 
     const urlChunks = String(urlWithMethod).split(' ');
@@ -56,7 +56,7 @@ export function forEndpoints<Endpoints extends ShapeOfEndpoints>(
       query,
     };
 
-    return await fetcher({
+    return fetcher({
       ...config,
       url: internal.url,
       method: internal.method as Method,
