@@ -8,7 +8,7 @@
 
 This package makes some assumptions:
 
-- you are using **Typescript** (preferably v4) and **axios**
+- you are using **axios** (^0.21)
 
 ## Installation
 
