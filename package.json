@@ -1,6 +1,6 @@
 {
   "name": "@ginterdev/endpoints",
-  "version": "0.0.0",
+  "version": "0.1.0-rc.1",
   "description": "Useful TypeScript types and utils for axios fetching",
   "license": "MIT",
   "main": "./lib/index.js",
