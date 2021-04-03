@@ -1,0 +1,29 @@
+name: main
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: ['**']
+
+jobs:
+  lint-and-test:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel outdated workflows
+        uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
+
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14.14.0'
+
+      - uses: bahmutov/npm-install@v1
+
+      - run: yarn run lint .
+      - run: yarn run typecheck
+      - run: yarn run build
+      - run: npm pack
