@@ -61,7 +61,7 @@ const request = forEndpoints<Endpoints>(axios.create());
 // execute a request:
 request('GET /companies', {
   query: {
-    searchPhrase: 'github'
+    searchPhrase: 'github',
   },
 });
 ```
@@ -76,18 +76,21 @@ import { EndpointProp } from '@ginterdev/endpoints';
 type Body<Url extends EndpointUrl> = EndpointProp<Endpoints, Url, 'body'>;
 type Params<Url extends EndpointUrl> = EndpointProp<Endpoints, Url, 'params'>;
 type Query<Url extends EndpointUrl> = EndpointProp<Endpoints, Url, 'query'>;
-type Response<Url extends EndpointUrl> = EndpointProp<Endpoints, Url, 'response'>;
-
+type Response<Url extends EndpointUrl> = EndpointProp<
+  Endpoints,
+  Url,
+  'response'
+>;
 
 type CreateCompanyBody = Body<'POST /companies'>;
 // { name: string }
 
-type CreateCompanyResponse = Response<'POST /companies'>
+type CreateCompanyResponse = Response<'POST /companies'>;
 // { success: true }
 
-type GetCompaniesQuery = Query<'GET /companies'>
+type GetCompaniesQuery = Query<'GET /companies'>;
 // { searchPhrase?: string }
 
-type GetCompanyParams = Params<'GET /companies/{id}'>
+type GetCompanyParams = Params<'GET /companies/{id}'>;
 // { id: string }
 ```
