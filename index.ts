@@ -14,7 +14,7 @@ type ShapeOfEndpoints = Record<string, EndpointShape>;
 type InternalConfig = {
   method: string;
   url: string;
-  query: Record<string, any>;
+  query?: Record<string, any>;
 };
 
 type PickOrUnknown<ObjectType, Key> = Key extends keyof ObjectType
@@ -38,8 +38,8 @@ export function forEndpoints<Endpoints extends ShapeOfEndpoints>(
     const { params, query, ...config } = options;
 
     const urlChunks = String(urlWithMethod).split(' ');
-    const [method] = urlChunks;
-    let [, url] = urlChunks;
+    const [method = 'GET'] = urlChunks;
+    let [, url = ''] = urlChunks;
 
     if (
       typeof url === 'string' &&
