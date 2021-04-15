@@ -23,13 +23,18 @@ export type EndpointProp<
   K extends keyof EndpointShape
 > = Endpoints[Url][K];
 
+export type EndpointOptions<
+  Endpoints extends ShapeOfEndpoints,
+  Url extends keyof Endpoints
+> = Omit<AxiosRequestConfig, 'data' | 'url' | 'method' | 'params'> &
+  Omit<Endpoints[Url], 'response' | 'responses'>;
+
 export function forEndpoints<Endpoints extends ShapeOfEndpoints>(
   fetcher: AxiosInstance,
 ) {
   function request<Url extends keyof Endpoints>(
     urlWithMethod: Url,
-    options: Omit<AxiosRequestConfig, 'data' | 'url' | 'method' | 'params'> &
-      Omit<Endpoints[Url], 'response' | 'responses'>,
+    options: EndpointOptions<Endpoints, Url>,
   ): Promise<AxiosResponse<EndpointProp<Endpoints, Url, 'response'>>> {
     const { params, query, ...config } = options;
 

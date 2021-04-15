@@ -27,22 +27,37 @@ Let's define types for our API. For simplicity there's two endpoints only.
 ```ts
 type Endpoints {
   'POST /companies': {
-    body: { name: string };
-    response: { success: true };
+    body: {
+      name: string;
+    };
+    response: {
+      success: boolean;
+    };
   };
 
   'GET /companies': {
-    query?: { searchPhrase?: string };
+    query?: {
+      searchPhrase?: string;
+    };
     response: {
-      success: true,
-      companies: { id: string; name: string }[];
+      success: boolean,
+      companies: {
+        id: string;
+        name: string;
+      };
     };
   };
 
   'GET /company/{id}': {
-    params: { id: string };
-    response: { success: true,
-      company: { id: string; name: string };
+    params: {
+      id: string;
+    };
+    response: {
+      success: boolean,
+      company: {
+        id: string;
+        name: string;
+      };
     };
   };
 };
@@ -53,8 +68,8 @@ type Endpoints {
 To have all the typechecking in place for our endpoints we just wrap a fetcher (currently only `axios` instance is supported) with a `forEndpoints`. From now on we can execute requests with a guarantee that all required things are passed correctly.
 
 ```ts
-import { forEndpoints } from '@ginterdev/endpoints';
 import axios from 'axios';
+import { forEndpoints } from '@ginterdev/endpoints';
 
 const request = forEndpoints<Endpoints>(axios.create());
 
@@ -64,23 +79,30 @@ request('GET /companies', {
     searchPhrase: 'github',
   },
 });
+
+// URL params are automatically injected:
+request('GET /companies/{id}', {
+  params: {
+    id: 'foobar',
+  },
+});
 ```
 
 ### Extracting types
 
 Now we can easily extract types of specific properties for each endpoint:
 
+<!-- prettier-ignore -->
 ```ts
-import { EndpointProp } from '@ginterdev/endpoints';
+import { EndpointOptions, EndpointProp } from '@ginterdev/endpoints';
 
+type EndpointUrl = keyof Endpoints;
+
+type Options<Url extends EndpointUrl> = EndpointOptions<Endpoints, Url>;
 type Body<Url extends EndpointUrl> = EndpointProp<Endpoints, Url, 'body'>;
 type Params<Url extends EndpointUrl> = EndpointProp<Endpoints, Url, 'params'>;
 type Query<Url extends EndpointUrl> = EndpointProp<Endpoints, Url, 'query'>;
-type Response<Url extends EndpointUrl> = EndpointProp<
-  Endpoints,
-  Url,
-  'response'
->;
+type Response<Url extends EndpointUrl> = EndpointProp<Endpoints, Url, 'response'>;
 
 type CreateCompanyBody = Body<'POST /companies'>;
 // { name: string }
@@ -94,3 +116,5 @@ type GetCompaniesQuery = Query<'GET /companies'>;
 type GetCompanyParams = Params<'GET /companies/{id}'>;
 // { id: string }
 ```
+
+<!-- prettier-ignore -->
