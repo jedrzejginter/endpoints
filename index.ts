@@ -17,10 +17,6 @@ type InternalConfig = {
   query?: Record<string, any>;
 };
 
-type PickOrUnknown<ObjectType, Key> = Key extends keyof ObjectType
-  ? ObjectType[Key]
-  : unknown;
-
 export type EndpointProp<
   Endpoints extends ShapeOfEndpoints,
   Url extends keyof Endpoints,
